@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Mom! ❤️</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background-color: #fdf5f3;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #4a3e3d;
+    }
+    .card {
+      width: 90%;
+      max-width: 420px;
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    h1 {
+      color: #d9534f;
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+    }
+    .tree-container {
+      height: 200px;
+      margin: 10px 0;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+    .message-box {
+      min-height: 80px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #5a4b49;
+      margin: 15px 0;
+      text-align: left;
+    }
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      background-color: #d9534f;
+      animation: blink 0.7s infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+    .countdown-title {
+      font-size: 0.85rem;
+      color: #888;
+      margin-top: 15px;
+    }
+    .timer {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #d9534f;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <h1>Happy Birthday, Mom! ❤️</h1>
+ 
+  <div class="tree-container">
+    <canvas id="heartCanvas"></canvas>
+  </div>
+  <div class="message-box">
+    <span id="typewriter"></span><span class="cursor">&nbsp;</span>
+  </div>
+  <div class="countdown-title">Counting down to your special day:</div>
+  <div class="timer" id="timer">Calculating...</div>
+</div>
+<button id="musicBtn" onclick="playMusic()" style="margin-top: 15px; padding: 8px 16px; border: none; background: #d9534f; color: white; border-radius: 8px; cursor: pointer; font-weight: bold;">🎵 Play Music</button>
+
+<audio id="bgMusic" src="music.mp3" loop></audio>
+<script>
+    // 1. Longer Message & Typewriter Effect
+  const message = "Dearest Mom, words can never fully express how grateful I am for everything you do. Thank you for your unconditional love, endless patience, and constant guidance through every step of my life. Your strength and wisdom inspire me every day. Wishing you a birthday as wonderful, loving, and extraordinary as you are! ❤️";
+  let index = 0;
+  function typeText() {
+    if (index < message.length) {
+      document.getElementById("typewriter").innerHTML += message.charAt(index);
+      index++;
+      setTimeout(typeText, 35); // Slightly faster typing for longer text
+    }
+  }
+  setTimeout(typeText, 600);
+  // 2. Play Background Music on First Click (Bypasses Browser Autoplay Restrictions)
+  window.addEventListener('click', () => {
+    const music = document.getElementById('bgMusic');
+    if (music.paused) {
+      music.play();
+    }
+  }, { once: true });
+  // 3. Birthday Countdown Timer (September 24, 2026)
+  const targetDate = new Date("2026-09-24T00:00:00").getTime();
+  function updateTimer() {
+    const now = new Date().getTime();
+    const diff = targetDate - now;
+    if (diff <= 0) {
+      document.getElementById("timer").innerHTML = "🎉 Happy Birthday, Mom! 🎉";
+      return;
+    }
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    document.getElementById("timer").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  }
+  setInterval(updateTimer, 1000);
+  updateTimer();
+  // 4. Heart Tree Blossom Animation (200 Hearts)
+  const canvas = document.getElementById('heartCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  function drawHeart(x, y, size, color) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.translate(x, y);
+    ctx.scale(size, size);
+    ctx.moveTo(0, 0);
+    ctx.bezierCurveTo(-5, -5, -10, 0, 0, 10);
+    ctx.bezierCurveTo(10, 0, 5, -5, 0, 0);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.restore();
+  }
+  // Draw Thicker Trunk
+  ctx.fillStyle = '#6e473b';
+  ctx.fillRect(canvas.width / 2 - 10, 100, 20, 80);
+  // Draw Branches
+  ctx.strokeStyle = '#6e473b';
+  ctx.lineWidth = 6;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(canvas.width / 2, 120);
+  ctx.lineTo(canvas.width / 2 - 25, 80);
+  ctx.moveTo(canvas.width / 2, 120);
+  ctx.lineTo(canvas.width / 2 + 25, 80);
+  ctx.stroke();
+  // Generate Fuller Canopy (200 Hearts)
+  const hearts = [];
+  for (let i = 0; i < 200; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const radius = Math.random() * 65;
+    hearts.push({
+      x: canvas.width / 2 + Math.cos(angle) * radius,
+      y: 75 + Math.sin(angle) * radius * 0.75,
+      size: Math.random() * 0.8 + 0.3,
+      color: `hsl(${Math.random() * 25 + 335}, 85%, 60%)`,
+      delay: Math.random() * 2500
+    });
+  }
+  let startTime = null;
+  function renderHearts(timestamp) {
+    if (!startTime) startTime = timestamp;
+    const elapsed = timestamp - startTime;
+    hearts.forEach(h => {
+      if (elapsed > h.delay) {
+        drawHeart(h.x, h.y, h.size, h.color);
+      }
+    });
+    requestAnimationFrame(renderHearts);
+  }
+  requestAnimationFrame(renderHearts);
+function playMusic() {
+  const music = document.getElementById('bgMusic');
+  const btn = document.getElementById('musicBtn');
+  
+  music.volume = 1.0;
+  music.play()
+    .then(() => {
+      btn.innerText = "🔊 Playing...";
+    })
+    .catch(error => {
+      console.error("Audio playback error:", error);
+      alert("Browser blocked audio or file format is invalid.");
+    });
+}
+</script>
+</body>
+</html>
